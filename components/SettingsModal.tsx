@@ -1,3 +1,8 @@
+import {
+  useAnimated,
+  useKeyboardController,
+  useTranslatePadding,
+} from "@/utils/storage";
 import React from "react";
 import {
   Modal,
@@ -13,25 +18,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 interface SettingsModalProps {
   visible: boolean;
   onClose: () => void;
-  animated: boolean;
-  onAnimatedChange: (value: boolean) => void;
-  keyboardController: boolean;
-  onKeyboardControllerChange: (value: boolean) => void;
-  translatePadding: boolean;
-  onTranslatePaddingChange: (value: boolean) => void;
 }
 
-export function SettingsModal({
-  visible,
-  onClose,
-  animated,
-  onAnimatedChange,
-  keyboardController,
-  onKeyboardControllerChange,
-  translatePadding,
-  onTranslatePaddingChange,
-}: SettingsModalProps) {
+export function SettingsModal({ visible, onClose }: SettingsModalProps) {
   const insets = useSafeAreaInsets();
+
+  const [animated, setAnimated] = useAnimated();
+  const [keyboardController, setKeyboardController] = useKeyboardController();
+  const [translatePadding, setTranslatePadding] = useTranslatePadding();
 
   return (
     <Modal visible={visible} onRequestClose={onClose} transparent>
@@ -53,14 +47,14 @@ export function SettingsModal({
 
           <View style={styles.settingRow}>
             <Text style={styles.settingLabel}>Animated</Text>
-            <Switch value={animated} onValueChange={onAnimatedChange} />
+            <Switch value={animated} onValueChange={setAnimated} />
           </View>
 
           <View style={styles.settingRow}>
             <Text style={styles.settingLabel}>Keyboard Controller</Text>
             <Switch
               value={keyboardController}
-              onValueChange={onKeyboardControllerChange}
+              onValueChange={setKeyboardController}
             />
           </View>
 
@@ -68,7 +62,7 @@ export function SettingsModal({
             <Text style={styles.settingLabel}>Translate with Padding</Text>
             <Switch
               value={translatePadding}
-              onValueChange={onTranslatePaddingChange}
+              onValueChange={setTranslatePadding}
             />
           </View>
         </Pressable>

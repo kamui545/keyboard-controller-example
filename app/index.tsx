@@ -1,7 +1,12 @@
 import { ChatFooter } from "@/components/ChatFooter";
 import { ChatMessage } from "@/components/ChatMessage";
 import { SettingsModal } from "@/components/SettingsModal";
-import { messages, type Message } from "@/data/messages";
+import { messages, type Message } from "@/constants/messages";
+import {
+  useAnimated,
+  useKeyboardController,
+  useTranslatePadding,
+} from "@/utils/storage";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { FlashList } from "@shopify/flash-list";
 import { Stack } from "expo-router";
@@ -23,9 +28,11 @@ export default function HomeScreen() {
 
   const lastMessageId = useRef(messages[messages.length - 1].id);
 
-  const [keyboardController, setKeyboardController] = useState(true);
-  const [animated, setAnimated] = useState(true);
-  const [translatePadding, setTranslatePadding] = useState(true);
+  // Persists settings with MMKV
+  const [animated] = useAnimated();
+  const [keyboardController] = useKeyboardController();
+  const [translatePadding] = useTranslatePadding();
+
   const [settingsVisible, setSettingsVisible] = useState(false);
 
   const [message, setMessage] = useState("");
@@ -63,7 +70,7 @@ export default function HomeScreen() {
     : RNKeyboardAvoidingView;
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.safeArea}>
       <Stack.Screen
         options={{
           title: "FlashList",
@@ -80,17 +87,11 @@ export default function HomeScreen() {
       <SettingsModal
         visible={settingsVisible}
         onClose={() => setSettingsVisible(false)}
-        animated={animated}
-        onAnimatedChange={setAnimated}
-        keyboardController={keyboardController}
-        onKeyboardControllerChange={setKeyboardController}
-        translatePadding={translatePadding}
-        onTranslatePaddingChange={setTranslatePadding}
       />
       <KeyboardView
         behavior={behavior()}
         keyboardVerticalOffset={header}
-        style={{ flex: 1 }}
+        style={styles.keyboardView}
       >
         <FlashList
           maintainVisibleContentPosition={{
@@ -117,6 +118,12 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  keyboardView: {
+    flex: 1,
+  },
   contentContainer: {
     padding: 12,
   },
