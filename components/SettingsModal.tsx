@@ -1,7 +1,9 @@
 import {
   useAnimated,
   useKeyboardController,
+  useListType,
   useTranslatePadding,
+  type ListType,
 } from "@/utils/storage";
 import React from "react";
 import {
@@ -26,6 +28,9 @@ export function SettingsModal({ visible, onClose }: SettingsModalProps) {
   const [animated, setAnimated] = useAnimated();
   const [keyboardController, setKeyboardController] = useKeyboardController();
   const [translatePadding, setTranslatePadding] = useTranslatePadding();
+  const [listType, setListType] = useListType();
+
+  const listTypes: ListType[] = ["FlatList", "FlashList", "LegendList"];
 
   return (
     <Modal visible={visible} onRequestClose={onClose} transparent>
@@ -43,6 +48,32 @@ export function SettingsModal({ visible, onClose }: SettingsModalProps) {
             >
               <Text style={styles.closeButtonText}>✕</Text>
             </TouchableOpacity>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>List Type</Text>
+            <View style={styles.listTypeContainer}>
+              {listTypes.map((type) => (
+                <TouchableOpacity
+                  key={type}
+                  activeOpacity={0.7}
+                  style={[
+                    styles.listTypeButton,
+                    listType === type && styles.listTypeButtonActive,
+                  ]}
+                  onPress={() => setListType(type)}
+                >
+                  <Text
+                    style={[
+                      styles.listTypeButtonText,
+                      listType === type && styles.listTypeButtonTextActive,
+                    ]}
+                  >
+                    {type}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
 
           <SettingSwitch
@@ -101,5 +132,37 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "#666",
     fontWeight: "300",
+  },
+  section: {
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 12,
+    color: "#333",
+  },
+  listTypeContainer: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  listTypeButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    backgroundColor: "#F0F0F0",
+    alignItems: "center",
+  },
+  listTypeButtonActive: {
+    backgroundColor: "#007AFF",
+  },
+  listTypeButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#666",
+  },
+  listTypeButtonTextActive: {
+    color: "#FFFFFF",
   },
 });

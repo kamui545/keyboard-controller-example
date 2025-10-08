@@ -1,14 +1,15 @@
+import { ChatFlashList } from "@/components/ChatFlashList";
+import { ChatFlatList } from "@/components/ChatFlatList";
 import { ChatFooter } from "@/components/ChatFooter";
-import { ChatMessage } from "@/components/ChatMessage";
+import { ChatLegendList } from "@/components/ChatLegendList";
 import { SettingsModal } from "@/components/SettingsModal";
 import { messages, type Message } from "@/constants/messages";
 import {
-  useAnimated,
   useKeyboardController,
+  useListType,
   useTranslatePadding,
 } from "@/utils/storage";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { FlashList } from "@shopify/flash-list";
 import { Stack } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
@@ -29,9 +30,9 @@ export default function HomeScreen() {
   const lastMessageId = useRef(messages[messages.length - 1].id);
 
   // Persists settings with MMKV
-  const [animated] = useAnimated();
   const [keyboardController] = useKeyboardController();
   const [translatePadding] = useTranslatePadding();
+  const [listType] = useListType();
 
   const [settingsVisible, setSettingsVisible] = useState(false);
 
@@ -69,11 +70,22 @@ export default function HomeScreen() {
     ? KeyboardAvoidingView
     : RNKeyboardAvoidingView;
 
+  function renderList() {
+    switch (listType) {
+      case "FlatList":
+        return <ChatFlatList data={data} />;
+      case "LegendList":
+        return <ChatLegendList data={data} />;
+      default:
+        return <ChatFlashList data={data} />;
+    }
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <Stack.Screen
         options={{
-          title: "FlashList",
+          title: listType,
           headerRight() {
             return (
               <Button
@@ -93,20 +105,7 @@ export default function HomeScreen() {
         keyboardVerticalOffset={header}
         style={styles.keyboardView}
       >
-        <FlashList
-          maintainVisibleContentPosition={{
-            autoscrollToBottomThreshold: 0.2,
-            animateAutoScrollToBottom: animated, // does not work properly with `react-native-keyboard-controller`
-            startRenderingFromBottom: true,
-          }}
-          contentInsetAdjustmentBehavior="automatic"
-          contentContainerStyle={styles.contentContainer}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <ChatMessage message={item.message} reply={item.reply} />
-          )}
-          data={data}
-        />
+        {renderList()}
         <ChatFooter
           message={message}
           onChange={setMessage}
@@ -123,8 +122,5 @@ const styles = StyleSheet.create({
   },
   keyboardView: {
     flex: 1,
-  },
-  contentContainer: {
-    padding: 12,
   },
 });
