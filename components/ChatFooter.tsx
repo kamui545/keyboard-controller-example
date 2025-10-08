@@ -30,7 +30,7 @@ export function ChatFooter({ message, onChange, onSubmit }: Props) {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 12,
-    paddingBottom: 8,
+    paddingVertical: 8,
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
