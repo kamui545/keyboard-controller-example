@@ -8,12 +8,12 @@ import {
   Modal,
   Pressable,
   StyleSheet,
-  Switch,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SettingSwitch } from "./SettingSwitch";
 
 interface SettingsModalProps {
   visible: boolean;
@@ -45,26 +45,25 @@ export function SettingsModal({ visible, onClose }: SettingsModalProps) {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>Animated</Text>
-            <Switch value={animated} onValueChange={setAnimated} />
-          </View>
+          <SettingSwitch
+            title="animateAutoScrollToBottom"
+            description="FlashList only"
+            value={animated}
+            onValueChange={setAnimated}
+          />
 
-          <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>Keyboard Controller</Text>
-            <Switch
-              value={keyboardController}
-              onValueChange={setKeyboardController}
-            />
-          </View>
+          <SettingSwitch
+            title="Keyboard Controller"
+            value={keyboardController}
+            onValueChange={setKeyboardController}
+          />
 
-          <View style={styles.settingRow}>
-            <Text style={styles.settingLabel}>Translate with Padding</Text>
-            <Switch
-              value={translatePadding}
-              onValueChange={setTranslatePadding}
-            />
-          </View>
+          <SettingSwitch
+            title="Translate with Padding"
+            description="Keyboard Controller only"
+            value={translatePadding}
+            onValueChange={setTranslatePadding}
+          />
         </Pressable>
       </Pressable>
     </Modal>
@@ -102,16 +101,5 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "#666",
     fontWeight: "300",
-  },
-  settingRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
-  },
-  settingLabel: {
-    fontSize: 16,
   },
 });
