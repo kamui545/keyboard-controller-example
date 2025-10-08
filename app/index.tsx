@@ -1,85 +1,129 @@
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import { ChatFooter } from "@/components/ChatFooter";
+import { ChatMessage } from "@/components/ChatMessage";
+import { messages, type Message } from "@/data/messages";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { FlashList } from "@shopify/flash-list";
-import React from "react";
-import { SafeAreaView, StyleSheet, TextInput, View } from "react-native";
-import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+import { Stack } from "expo-router";
+import React, { useRef, useState } from "react";
+import {
+  Button,
+  Platform,
+  KeyboardAvoidingView as RNKeyboardAvoidingView,
+  SafeAreaView,
+  StyleSheet,
+} from "react-native";
+import {
+  KeyboardAvoidingView,
+  type KeyboardAvoidingViewProps,
+} from "react-native-keyboard-controller";
 
-const messages = [
-  "Hello, how are you?",
-  "I am fine, thank you!",
-  "What is your name?",
-  "My name is John Doe.",
-  "Hello, how are you?",
-  "I am fine, thank you!",
-  "What is your name?",
-  "My name is John Doe.",
-  "Hello, how are you?",
-  "I am fine, thank you!",
-  "What is your name?",
-  "My name is John Doe.",
-  "My name is John Doe.",
-  "My name is John Doe.",
-  "My name is John Doe.",
-  "My name is John Doe.",
-];
+function btnColor(value: boolean) {
+  return value ? "green" : "red";
+}
+
+function btnOnOff(value: boolean) {
+  return value ? "on" : "off";
+}
 
 export default function HomeScreen() {
   const header = useHeaderHeight();
 
+  const lastMessageId = useRef(messages[messages.length - 1].id);
+
+  const [keyboardController, setKeyboardController] = useState(true);
+  const [animated, setAnimated] = useState(true);
+  const [translatePadding, setTranslatePadding] = useState(true);
+
+  const [message, setMessage] = useState("");
+  const [data, setData] = useState<Message[]>(messages);
+
+  function addMessage() {
+    lastMessageId.current++;
+
+    setData([
+      ...data,
+      {
+        id: lastMessageId.current,
+        message: message,
+        reply: false,
+      },
+    ]);
+
+    setMessage("");
+  }
+
+  function behavior(): KeyboardAvoidingViewProps["behavior"] {
+    if (Platform.OS === "android") {
+      return undefined;
+    }
+
+    if (keyboardController && translatePadding) {
+      return "translate-with-padding";
+    }
+
+    return "padding";
+  }
+
+  const KeyboardView = keyboardController
+    ? KeyboardAvoidingView
+    : RNKeyboardAvoidingView;
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <KeyboardAvoidingView
-        behavior={"padding"}
+      <Stack.Screen
+        options={{
+          title: "FlashList",
+          headerLeft() {
+            return (
+              <Button
+                onPress={() => setAnimated(!animated)}
+                color={btnColor(animated)}
+                title={`Anim: ${btnOnOff(animated)}`}
+              />
+            );
+          },
+          headerRight() {
+            return (
+              <Button
+                onPress={() => setKeyboardController(!keyboardController)}
+                color={btnColor(keyboardController)}
+                title={`Ctrler: ${btnOnOff(keyboardController)}`}
+              />
+            );
+          },
+        }}
+      />
+      <KeyboardView
+        behavior={behavior()}
         keyboardVerticalOffset={header}
-        style={{ flex: 1, paddingHorizontal: 12 }}
+        style={{ flex: 1 }}
       >
         <FlashList
           maintainVisibleContentPosition={{
             autoscrollToBottomThreshold: 0.2,
-            animateAutoScrollToBottom: false,
+            animateAutoScrollToBottom: animated, // does not work properly with `react-native-keyboard-controller`
             startRenderingFromBottom: true,
           }}
+          contentInsetAdjustmentBehavior="automatic"
+          contentContainerStyle={styles.contentContainer}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <ThemedView style={styles.messageContainer}>
-              <ThemedText type="default">{item}</ThemedText>
-            </ThemedView>
+            <ChatMessage message={item.message} reply={item.reply} />
           )}
-          data={messages}
+          data={data}
         />
-        <View>
-          <TextInput placeholder="focus here" style={styles.input} />
-        </View>
-      </KeyboardAvoidingView>
+        <ChatFooter
+          message={message}
+          onChange={setMessage}
+          onSubmit={addMessage}
+        />
+      </KeyboardView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  messageContainer: {
-    padding: 16,
-    backgroundColor: "white",
-    flexDirection: "row",
-    flexShrink: 0,
-    flexGrow: 0,
-    width: "50%",
-    borderRadius: 8,
-    marginBottom: 8,
-  },
-  input: {
-    padding: 16,
-    backgroundColor: "white",
-    borderRadius: 8,
-    marginBottom: 8,
+  contentContainer: {
+    padding: 12,
   },
 });
