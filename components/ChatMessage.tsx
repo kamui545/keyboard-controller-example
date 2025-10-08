@@ -1,5 +1,4 @@
-import { ThemedText } from "@/components/ThemedText";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 type ChatMessageProps = {
   message: string;
@@ -17,11 +16,11 @@ export function ChatMessage({ message, reply }: ChatMessageProps) {
           reply ? styles.replyBubble : styles.messageBubble,
         ]}
       >
-        <ThemedText
+        <Text
           style={[styles.text, reply ? styles.replyText : styles.messageText]}
         >
           {message}
-        </ThemedText>
+        </Text>
       </View>
     </View>
   );

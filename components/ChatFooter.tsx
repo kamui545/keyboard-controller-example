@@ -16,6 +16,7 @@ export function ChatFooter({ message, onChange, onSubmit }: Props) {
         onSubmitEditing={onSubmit}
         returnKeyType="send"
         placeholder="Type a message..."
+        placeholderTextColor="#aaa"
         style={styles.input}
       />
     </View>
