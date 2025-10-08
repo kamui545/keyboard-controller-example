@@ -1,5 +1,6 @@
 import { ChatFooter } from "@/components/ChatFooter";
 import { ChatMessage } from "@/components/ChatMessage";
+import { SettingsModal } from "@/components/SettingsModal";
 import { messages, type Message } from "@/data/messages";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { FlashList } from "@shopify/flash-list";
@@ -17,14 +18,6 @@ import {
   type KeyboardAvoidingViewProps,
 } from "react-native-keyboard-controller";
 
-function btnColor(value: boolean) {
-  return value ? "green" : "red";
-}
-
-function btnOnOff(value: boolean) {
-  return value ? "on" : "off";
-}
-
 export default function HomeScreen() {
   const header = useHeaderHeight();
 
@@ -33,6 +26,7 @@ export default function HomeScreen() {
   const [keyboardController, setKeyboardController] = useState(true);
   const [animated, setAnimated] = useState(true);
   const [translatePadding, setTranslatePadding] = useState(true);
+  const [settingsVisible, setSettingsVisible] = useState(false);
 
   const [message, setMessage] = useState("");
   const [data, setData] = useState<Message[]>(messages);
@@ -73,25 +67,25 @@ export default function HomeScreen() {
       <Stack.Screen
         options={{
           title: "FlashList",
-          headerLeft() {
-            return (
-              <Button
-                onPress={() => setAnimated(!animated)}
-                color={btnColor(animated)}
-                title={`Anim: ${btnOnOff(animated)}`}
-              />
-            );
-          },
           headerRight() {
             return (
               <Button
-                onPress={() => setKeyboardController(!keyboardController)}
-                color={btnColor(keyboardController)}
-                title={`Ctrler: ${btnOnOff(keyboardController)}`}
+                onPress={() => setSettingsVisible(true)}
+                title="Settings"
               />
             );
           },
         }}
+      />
+      <SettingsModal
+        visible={settingsVisible}
+        onClose={() => setSettingsVisible(false)}
+        animated={animated}
+        onAnimatedChange={setAnimated}
+        keyboardController={keyboardController}
+        onKeyboardControllerChange={setKeyboardController}
+        translatePadding={translatePadding}
+        onTranslatePaddingChange={setTranslatePadding}
       />
       <KeyboardView
         behavior={behavior()}
