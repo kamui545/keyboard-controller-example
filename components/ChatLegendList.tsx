@@ -1,28 +1,25 @@
 import { ChatMessage } from "@/components/ChatMessage";
 import { type Message } from "@/constants/messages";
+import { LegendList } from "@legendapp/list";
 import React from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
 interface ChatLegendListProps {
   data: Message[];
 }
 
 export function ChatLegendList({ data }: ChatLegendListProps) {
-  // TODO: Replace with actual LegendList implementation once @legendapp/list is installed
-  // For now, using FlatList as a placeholder
   return (
-    <FlatList
-      maintainVisibleContentPosition={{
-        autoscrollToBottomThreshold: 0.2,
-        minIndexForVisible: 0,
-      }}
-      contentInsetAdjustmentBehavior="automatic"
+    <LegendList
       contentContainerStyle={styles.contentContainer}
+      data={data}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
         <ChatMessage message={item.message} reply={item.reply} />
       )}
-      data={data}
+      maintainScrollAtEnd
+      alignItemsAtEnd
+      recycleItems
     />
   );
 }
