@@ -8,7 +8,7 @@ type ChatMessageProps = {
 export function ChatMessage({ message, reply }: ChatMessageProps) {
   return (
     <View
-      style={[styles.container, reply ? styles.rightAlign : styles.leftAlign]}
+      style={[styles.container, reply ? styles.leftAlign : styles.rightAlign]}
     >
       <View
         style={[
@@ -42,11 +42,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     maxWidth: "75%",
   },
-  messageBubble: {
+  replyBubble: {
     backgroundColor: "#E5E5EA",
     borderBottomLeftRadius: 4,
   },
-  replyBubble: {
+  messageBubble: {
     backgroundColor: "#007AFF",
     borderBottomRightRadius: 4,
   },
@@ -54,10 +54,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 20,
   },
-  messageText: {
+  replyText: {
     color: "#000000",
   },
-  replyText: {
+  messageText: {
     color: "#FFFFFF",
   },
 });
