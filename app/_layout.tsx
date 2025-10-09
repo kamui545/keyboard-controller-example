@@ -8,7 +8,8 @@ export default function RootLayout() {
     <KeyboardProvider>
       <StatusBar style="dark" />
       <Stack>
-        <Stack.Screen name="index" />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="chat" />
       </Stack>
     </KeyboardProvider>
   );
