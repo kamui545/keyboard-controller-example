@@ -1,26 +1,30 @@
 import { IconSymbol } from "@/components/ui/IconSymbol";
-import type { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 type Props = {
-  message: string;
-  onChange: Dispatch<SetStateAction<string>>;
-  onSubmit: () => void;
+  onSubmit: (message: string) => void;
 };
 
-export function ChatFooter({ message, onChange, onSubmit }: Props) {
+export function ChatFooter({ onSubmit }: Props) {
+  const [message, setMessage] = useState("");
+
+  function handleSubmit() {
+    onSubmit(message);
+    setMessage("");
+  }
+
   return (
     <View style={styles.container}>
       <TextInput
         multiline
         value={message}
-        onChangeText={onChange}
-        onSubmitEditing={onSubmit}
+        onChangeText={setMessage}
         placeholder="Type a message..."
         placeholderTextColor="#aaa"
         style={styles.input}
       />
-      <TouchableOpacity style={styles.button} onPress={onSubmit}>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <IconSymbol name="arrow.up" color="white" />
       </TouchableOpacity>
     </View>

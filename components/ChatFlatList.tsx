@@ -8,7 +8,7 @@ interface ChatFlatListProps {
 }
 
 export function ChatFlatList({ data }: ChatFlatListProps) {
-  const messages = [...data].toReversed();
+  const messages = data.toReversed();
 
   return (
     <FlatList

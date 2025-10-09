@@ -36,10 +36,9 @@ export default function HomeScreen() {
 
   const [settingsVisible, setSettingsVisible] = useState(false);
 
-  const [message, setMessage] = useState("");
   const [data, setData] = useState<Message[]>(messages);
 
-  function addMessage() {
+  function addMessage(message: string) {
     lastMessageId.current++;
 
     setData([
@@ -50,8 +49,6 @@ export default function HomeScreen() {
         reply: false,
       },
     ]);
-
-    setMessage("");
   }
 
   function behavior(): KeyboardAvoidingViewProps["behavior"] {
@@ -106,11 +103,7 @@ export default function HomeScreen() {
         style={styles.keyboardView}
       >
         {renderList()}
-        <ChatFooter
-          message={message}
-          onChange={setMessage}
-          onSubmit={addMessage}
-        />
+        <ChatFooter onSubmit={addMessage} />
       </KeyboardView>
     </SafeAreaView>
   );
