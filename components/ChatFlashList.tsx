@@ -14,18 +14,17 @@ export function ChatFlashList({ data }: ChatFlashListProps) {
 
   return (
     <FlashList
+      contentContainerStyle={styles.contentContainer}
+      data={data}
+      keyExtractor={(item) => item.id.toString()}
+      renderItem={({ item }) => (
+        <ChatMessage message={item.message} reply={item.reply} />
+      )}
       maintainVisibleContentPosition={{
         autoscrollToBottomThreshold: 0.2,
         animateAutoScrollToBottom: animated,
         startRenderingFromBottom: true,
       }}
-      contentInsetAdjustmentBehavior="automatic"
-      contentContainerStyle={styles.contentContainer}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <ChatMessage message={item.message} reply={item.reply} />
-      )}
-      data={data}
     />
   );
 }

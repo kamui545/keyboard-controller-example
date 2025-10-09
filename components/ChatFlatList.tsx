@@ -1,6 +1,5 @@
 import { ChatMessage } from "@/components/ChatMessage";
 import { type Message } from "@/constants/messages";
-import { useAnimated } from "@/utils/storage";
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
 
@@ -9,21 +8,17 @@ interface ChatFlatListProps {
 }
 
 export function ChatFlatList({ data }: ChatFlatListProps) {
-  const [animated] = useAnimated();
+  const messages = [...data].toReversed();
 
   return (
     <FlatList
-      maintainVisibleContentPosition={{
-        autoscrollToBottomThreshold: 0.2,
-        minIndexForVisible: 0,
-      }}
-      contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={styles.contentContainer}
+      data={messages}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
         <ChatMessage message={item.message} reply={item.reply} />
       )}
-      data={data}
+      inverted
     />
   );
 }
