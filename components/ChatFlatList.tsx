@@ -1,14 +1,10 @@
 import { ChatEmpty } from "@/components/ChatEmpty";
-import { type Message } from "@/constants/messages";
 import { keyExtractor, renderMessage } from "@/utils/messages";
+import type { ChatListProps } from "@/utils/types";
 import React from "react";
 import { FlatList } from "react-native";
 
-interface ChatFlatListProps {
-  data: Message[];
-}
-
-export function ChatFlatList({ data }: ChatFlatListProps) {
+export function ChatFlatList({ data }: ChatListProps) {
   const messages = data.toReversed();
 
   return (

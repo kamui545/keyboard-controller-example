@@ -1,15 +1,11 @@
 import { ChatEmpty } from "@/components/ChatEmpty";
-import { type Message } from "@/constants/messages";
 import { keyExtractor, renderMessage } from "@/utils/messages";
 import { useAnimated } from "@/utils/storage";
+import type { ChatListProps } from "@/utils/types";
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
 
-interface ChatFlashListProps {
-  data: Message[];
-}
-
-export function ChatFlashList({ data }: ChatFlashListProps) {
+export function ChatFlashList({ data }: ChatListProps) {
   const [animated] = useAnimated();
 
   return (

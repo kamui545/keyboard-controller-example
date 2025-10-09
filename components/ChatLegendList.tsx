@@ -1,14 +1,10 @@
 import { ChatEmpty } from "@/components/ChatEmpty";
-import { type Message } from "@/constants/messages";
 import { keyExtractor, renderMessage } from "@/utils/messages";
+import type { ChatListProps } from "@/utils/types";
 import { LegendList } from "@legendapp/list";
 import React from "react";
 
-interface ChatLegendListProps {
-  data: Message[];
-}
-
-export function ChatLegendList({ data }: ChatLegendListProps) {
+export function ChatLegendList({ data }: ChatListProps) {
   return (
     <LegendList
       data={data}
