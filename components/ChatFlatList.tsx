@@ -1,7 +1,8 @@
-import { ChatMessage } from "@/components/ChatMessage";
+import { ChatEmpty } from "@/components/ChatEmpty";
 import { type Message } from "@/constants/messages";
+import { keyExtractor, renderMessage } from "@/utils/messages";
 import React from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList } from "react-native";
 
 interface ChatFlatListProps {
   data: Message[];
@@ -12,19 +13,11 @@ export function ChatFlatList({ data }: ChatFlatListProps) {
 
   return (
     <FlatList
-      contentContainerStyle={styles.contentContainer}
       data={messages}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <ChatMessage message={item.message} reply={item.reply} />
-      )}
-      inverted
+      keyExtractor={keyExtractor}
+      renderItem={renderMessage}
+      ListEmptyComponent={<ChatEmpty />}
+      inverted={messages.length > 0} // avoid upside down empty state message due to inverted.
     />
   );
 }
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    padding: 12,
-  },
-});

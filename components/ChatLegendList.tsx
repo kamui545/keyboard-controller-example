@@ -1,8 +1,8 @@
-import { ChatMessage } from "@/components/ChatMessage";
+import { ChatEmpty } from "@/components/ChatEmpty";
 import { type Message } from "@/constants/messages";
+import { keyExtractor, renderMessage } from "@/utils/messages";
 import { LegendList } from "@legendapp/list";
 import React from "react";
-import { StyleSheet } from "react-native";
 
 interface ChatLegendListProps {
   data: Message[];
@@ -11,21 +11,13 @@ interface ChatLegendListProps {
 export function ChatLegendList({ data }: ChatLegendListProps) {
   return (
     <LegendList
-      contentContainerStyle={styles.contentContainer}
       data={data}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <ChatMessage message={item.message} reply={item.reply} />
-      )}
+      keyExtractor={keyExtractor}
+      renderItem={renderMessage}
+      ListEmptyComponent={<ChatEmpty />}
       maintainScrollAtEnd
       alignItemsAtEnd
       recycleItems
     />
   );
 }
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    padding: 12,
-  },
-});

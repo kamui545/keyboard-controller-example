@@ -1,8 +1,10 @@
 import {
   useAnimated,
+  useChatMode,
   useKeyboardController,
   useListType,
   useTranslatePadding,
+  type ChatMode,
   type ListType,
 } from "@/utils/storage";
 import React from "react";
@@ -22,6 +24,35 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
+const listTypes: ListType[] = ["FlatList", "FlashList", "LegendList"];
+const chatModes: ChatMode[] = ["Long", "Short", "Empty"];
+
+interface SettingButtonProps<T extends string> {
+  value: T;
+  label: T;
+  isActive: boolean;
+  onPress: () => void;
+}
+
+function SettingButton<T extends string>({
+  value,
+  label,
+  isActive,
+  onPress,
+}: SettingButtonProps<T>) {
+  return (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      style={[styles.button, isActive && styles.buttonActive]}
+      onPress={onPress}
+    >
+      <Text style={[styles.buttonText, isActive && styles.buttonTextActive]}>
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
+}
+
 export function SettingsModal({ visible, onClose }: SettingsModalProps) {
   const insets = useSafeAreaInsets();
 
@@ -29,8 +60,9 @@ export function SettingsModal({ visible, onClose }: SettingsModalProps) {
   const [keyboardController, setKeyboardController] = useKeyboardController();
   const [translatePadding, setTranslatePadding] = useTranslatePadding();
   const [listType, setListType] = useListType();
+  const [chatMode, setChatMode] = useChatMode();
 
-  const listTypes: ListType[] = ["FlatList", "FlashList", "LegendList"];
+  const isFlashList = listType === "FlashList";
 
   return (
     <Modal visible={visible} onRequestClose={onClose} transparent>
@@ -51,27 +83,31 @@ export function SettingsModal({ visible, onClose }: SettingsModalProps) {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>List Type</Text>
-            <View style={styles.listTypeContainer}>
+            <Text style={styles.sectionTitle}>List</Text>
+            <View style={styles.buttonContainer}>
               {listTypes.map((type) => (
-                <TouchableOpacity
+                <SettingButton
                   key={type}
-                  activeOpacity={0.7}
-                  style={[
-                    styles.listTypeButton,
-                    listType === type && styles.listTypeButtonActive,
-                  ]}
+                  value={type}
+                  label={type}
+                  isActive={listType === type}
                   onPress={() => setListType(type)}
-                >
-                  <Text
-                    style={[
-                      styles.listTypeButtonText,
-                      listType === type && styles.listTypeButtonTextActive,
-                    ]}
-                  >
-                    {type}
-                  </Text>
-                </TouchableOpacity>
+                />
+              ))}
+            </View>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Chat</Text>
+            <View style={styles.buttonContainer}>
+              {chatModes.map((mode) => (
+                <SettingButton
+                  key={mode}
+                  value={mode}
+                  label={mode}
+                  isActive={chatMode === mode}
+                  onPress={() => setChatMode(mode)}
+                />
               ))}
             </View>
           </View>
@@ -79,8 +115,9 @@ export function SettingsModal({ visible, onClose }: SettingsModalProps) {
           <SettingSwitch
             title="animateAutoScrollToBottom"
             description="FlashList only"
-            value={animated}
+            value={isFlashList && animated}
             onValueChange={setAnimated}
+            disabled={!isFlashList}
           />
 
           <SettingSwitch
@@ -92,8 +129,9 @@ export function SettingsModal({ visible, onClose }: SettingsModalProps) {
           <SettingSwitch
             title="Translate with Padding"
             description="Keyboard Controller only"
-            value={translatePadding}
+            value={keyboardController && translatePadding}
             onValueChange={setTranslatePadding}
+            disabled={!keyboardController}
           />
         </Pressable>
       </Pressable>
@@ -142,11 +180,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     color: "#333",
   },
-  listTypeContainer: {
+  buttonContainer: {
     flexDirection: "row",
     gap: 8,
   },
-  listTypeButton: {
+  button: {
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -154,15 +192,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F0",
     alignItems: "center",
   },
-  listTypeButtonActive: {
+  buttonActive: {
     backgroundColor: "#007AFF",
   },
-  listTypeButtonText: {
+  buttonText: {
     fontSize: 14,
     fontWeight: "600",
     color: "#666",
   },
-  listTypeButtonTextActive: {
+  buttonTextActive: {
     color: "#FFFFFF",
   },
 });

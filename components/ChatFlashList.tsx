@@ -1,9 +1,9 @@
-import { ChatMessage } from "@/components/ChatMessage";
+import { ChatEmpty } from "@/components/ChatEmpty";
 import { type Message } from "@/constants/messages";
+import { keyExtractor, renderMessage } from "@/utils/messages";
 import { useAnimated } from "@/utils/storage";
 import { FlashList } from "@shopify/flash-list";
 import React from "react";
-import { StyleSheet } from "react-native";
 
 interface ChatFlashListProps {
   data: Message[];
@@ -14,12 +14,10 @@ export function ChatFlashList({ data }: ChatFlashListProps) {
 
   return (
     <FlashList
-      contentContainerStyle={styles.contentContainer}
       data={data}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <ChatMessage message={item.message} reply={item.reply} />
-      )}
+      keyExtractor={keyExtractor}
+      renderItem={renderMessage}
+      ListEmptyComponent={<ChatEmpty />}
       maintainVisibleContentPosition={{
         autoscrollToBottomThreshold: 0.2,
         animateAutoScrollToBottom: animated,
@@ -28,9 +26,3 @@ export function ChatFlashList({ data }: ChatFlashListProps) {
     />
   );
 }
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    padding: 12,
-  },
-});

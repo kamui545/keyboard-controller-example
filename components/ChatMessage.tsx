@@ -28,7 +28,7 @@ export function ChatMessage({ message, reply }: ChatMessageProps) {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 6,
+    marginVertical: 12,
   },
   leftAlign: {
     alignItems: "flex-start",
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
   bubble: {
     paddingHorizontal: 16,
     paddingVertical: 10,
+    marginHorizontal: 12,
     borderRadius: 20,
     maxWidth: "75%",
   },

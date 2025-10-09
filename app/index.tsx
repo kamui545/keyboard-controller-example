@@ -3,15 +3,17 @@ import { ChatFlatList } from "@/components/ChatFlatList";
 import { ChatFooter } from "@/components/ChatFooter";
 import { ChatLegendList } from "@/components/ChatLegendList";
 import { SettingsModal } from "@/components/SettingsModal";
-import { messages, type Message } from "@/constants/messages";
+import { type Message } from "@/constants/messages";
+import { getMessages } from "@/utils/messages";
 import {
+  useChatMode,
   useKeyboardController,
   useListType,
   useTranslatePadding,
 } from "@/utils/storage";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { Stack } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Platform,
@@ -27,16 +29,24 @@ import {
 export default function HomeScreen() {
   const header = useHeaderHeight();
 
-  const lastMessageId = useRef(messages[messages.length - 1].id);
-
   // Persists settings with MMKV
   const [keyboardController] = useKeyboardController();
   const [translatePadding] = useTranslatePadding();
   const [listType] = useListType();
+  const [chatMode] = useChatMode();
 
   const [settingsVisible, setSettingsVisible] = useState(false);
 
+  const messages = getMessages(chatMode);
+  const lastMessageId = useRef(messages[messages.length - 1]?.id);
   const [data, setData] = useState<Message[]>(messages);
+
+  // update when switch chat mode
+  useEffect(() => {
+    const newMessages = getMessages(chatMode);
+    lastMessageId.current = newMessages[newMessages.length - 1]?.id;
+    setData(newMessages);
+  }, [chatMode]);
 
   function addMessage(message: string) {
     lastMessageId.current++;

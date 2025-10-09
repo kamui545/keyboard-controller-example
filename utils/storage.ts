@@ -1,6 +1,7 @@
 import { useMMKVBoolean, useMMKVString } from "react-native-mmkv";
 
 export type ListType = "FlatList" | "FlashList" | "LegendList";
+export type ChatMode = "Long" | "Short" | "Empty";
 
 export function useKeyboardController() {
   const [value, setValue] = useMMKVBoolean("keyboardController");
@@ -23,5 +24,11 @@ export function useTranslatePadding() {
 export function useListType() {
   const [value, setValue] = useMMKVString("listType");
 
-  return [value ?? "FlashList", setValue] as const;
+  return [(value as ListType) ?? "FlashList", setValue] as const;
+}
+
+export function useChatMode() {
+  const [value, setValue] = useMMKVString("chatMode");
+
+  return [(value as ChatMode) ?? "Long", setValue] as const;
 }
