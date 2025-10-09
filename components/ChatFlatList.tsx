@@ -1,5 +1,6 @@
 import { ChatEmpty } from "@/components/ChatEmpty";
 import { keyExtractor, renderMessage } from "@/utils/messages";
+import { styles } from "@/utils/styles";
 import type { ChatListProps } from "@/utils/types";
 import React from "react";
 import { FlatList } from "react-native";
@@ -9,6 +10,7 @@ export function ChatFlatList({ data }: ChatListProps) {
 
   return (
     <FlatList
+      contentContainerStyle={styles.list}
       data={messages}
       keyExtractor={keyExtractor}
       renderItem={renderMessage}
